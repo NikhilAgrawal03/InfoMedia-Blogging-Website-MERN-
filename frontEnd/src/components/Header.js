@@ -22,9 +22,9 @@ const Header = (props) => {
                   <i className="fas fa-user"></i> Sign In
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="#">
+              <LinkContainer to="/bookmark">
                 <Nav.Link>
-                  <i className="fas fa-shopping-cart"></i> Cart
+                  <i className="fas fa-bookmark"></i> Bookmarks
                 </Nav.Link>
               </LinkContainer>
             </Nav>

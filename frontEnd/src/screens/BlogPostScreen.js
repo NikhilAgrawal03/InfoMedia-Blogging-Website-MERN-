@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader.js";
@@ -6,20 +6,48 @@ import Message from "../components/Message.js";
 import LIKE from "../components/Like.js";
 import { Row, Col, Image, ListGroup } from "react-bootstrap";
 import { listBlogDetails } from "../actions/blogActions.js";
+import { removebookmark } from "../actions/bookmarkActions.js";
 /**
  * @author
  * @function BlogPostScreen
  **/
 
-const BlogPostScreen = ({ match }) => {
+const BlogPostScreen = ({ match, history }) => {
   const dispatch = useDispatch();
 
   const blogDetails = useSelector((state) => state.blogDetails);
   const { loading, error, blog } = blogDetails;
 
+  const bookmark = useSelector((state) => state.bookmark);
+  const { bookmarkItems } = bookmark;
+
+  let bookmarked = [];
+  bookmarkItems.map((item) => {
+    bookmarked.push(item);
+  });
+  console.log(bookmarked);
+
+  let bk = false;
+  bookmarked.map((eachBookmark) => {
+    if (eachBookmark.blog === blog._id) {
+      bk = true;
+      return bk;
+    }
+  });
+
   useEffect(() => {
     dispatch(listBlogDetails(match.params.id));
   }, [dispatch, match]);
+
+  const bookmarkBlogHandler = () => {
+    // if (bk) {
+    //   bk = false;
+    //   dispatch(removebookmark(id));
+    // } else {
+    //   history.push(`/bookmark/${match.params.id}`);
+    // }
+    history.push(`/bookmark/${match.params.id}`);
+  };
 
   const blogImgStyle = {
     objectFit: "cover",
@@ -52,19 +80,20 @@ const BlogPostScreen = ({ match }) => {
             Posted by {blog.user} on {blog.createdAt}
           </p>
           <div className="my-3" style={{ textAlign: "center" }}>
-            <div class="mr-2" style={{ display: "inline-block" }}>
+            <div className="mr-2" style={{ display: "inline-block" }}>
               <LIKE value={blog.rating} text={blog.rating} />
             </div>
-            <div class="ml-2" style={{ display: "inline-block" }}>
+            <div
+              onClick={bookmarkBlogHandler}
+              type="button"
+              className="ml-2"
+              style={{ display: "inline-block" }}
+            >
               <i
-                class="far fa-bookmark ml-4"
-                style={{ fontSize: "40px", display: "inline" }}
+                style={{ fontSize: "40px", color: "red" }}
+                className={bk ? "fas fa-bookmark" : "far fa-bookmark"}
               ></i>
             </div>
-            {/* <i
-              class="far fa-bookmark ml-4"
-              style={{ fontSize: "40px", display: "inline" }}
-            ></i> */}
           </div>
           <Row>
             <Col>
